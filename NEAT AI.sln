@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEAT AI", "NEAT AI\NEAT AI.csproj", "{BD71A826-1B15-4215-B9D4-AA20FF963459}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEAT AI Test", "NEAT AI Test\NEAT AI Test.csproj", "{5F851AFD-6CF9-4D4F-8EEC-E2B294E7CC0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD71A826-1B15-4215-B9D4-AA20FF963459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD71A826-1B15-4215-B9D4-AA20FF963459}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD71A826-1B15-4215-B9D4-AA20FF963459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD71A826-1B15-4215-B9D4-AA20FF963459}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F851AFD-6CF9-4D4F-8EEC-E2B294E7CC0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F851AFD-6CF9-4D4F-8EEC-E2B294E7CC0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F851AFD-6CF9-4D4F-8EEC-E2B294E7CC0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F851AFD-6CF9-4D4F-8EEC-E2B294E7CC0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {084A1EC6-0B95-4710-B35B-6EA8140011F4}
+	EndGlobalSection
+EndGlobal
