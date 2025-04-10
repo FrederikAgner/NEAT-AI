@@ -8,6 +8,7 @@ public class Species {
     public float AvgFitness { get; set; }
     public float AvgAdjFitness { get; set; }
     public float TotalFitness { get; set; }
+    public float LastFitness { get; set; }
     public int GensSinceLastImprovement { get; set; } = 0;
 
     public Species(int SpeciesID, Brain Representative) {
@@ -29,6 +30,15 @@ public class Species {
             brain.AdjustedFitness = brain.Fitness / speciesSize;
         }
         AvgAdjFitness = Members.Average(b => b.AdjustedFitness);
+
+        float currentFitness = AvgFitness; // Assuming the representative's fitness is used
+        if (currentFitness > LastFitness) {
+            GensSinceLastImprovement = 0; // Reset the generation counter if there's improvement
+            LastFitness = currentFitness; // Update the fitness record
+        }
+        else {
+            GensSinceLastImprovement++; // Increment if no improvement
+        }
     }
 
     public void CalculateOffspring(float GlobalAdjAvg, int PopulationSize) {
@@ -49,7 +59,6 @@ public class Species {
         float totalFitness = Members.Sum(m => m.Fitness);
         float sums = 0;
 
-        Random RND = new();
         var random1 = (float)(RND.NextDouble() * totalFitness);
         Brain parent1 = new();
         foreach (var item in Members) {

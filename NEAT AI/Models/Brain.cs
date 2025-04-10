@@ -77,13 +77,66 @@ public class Brain() {
         }
     }
 
+    public void LoadInputs(float[] inputs) {
+        int i = 0;
+        foreach (var node in Nodes) {
+            if (node.NodeLayer != 1) continue;
+            node.SumInput = inputs[i];
+            node.SumOutput = inputs[i++];
+        }
+    }
+
+    public void RunTheNetwork() {
+        int maxLayer = Nodes.Max(n => n.NodeLayer);
+
+        for (int layer = 2; layer <= maxLayer; layer++) {
+            foreach (var node in Nodes) {
+                if (node.NodeLayer != layer) continue;
+
+                node.SumInput = 0;
+                foreach (var conn in Connections.Where(c => c.OutNodeID == node.NodeID && c.Enabled)) {
+                    Node inputNode = Nodes.FirstOrDefault(x => x.NodeID == conn.InNodeID);
+                    if (inputNode != null) {
+                        node.SumInput += inputNode.SumOutput * conn.ConnWeight;
+                    }
+                }
+                node.SumOutput = (float)(1 / (1 + Math.Exp(-node.SumInput)));
+            }
+        }
+    }
+
+    public float GetOutput() {
+        var outputNode = Nodes.FirstOrDefault(x => x.NodeType == NodeTypeEnum.Output);
+        return outputNode.SumOutput;
+    }
+
+    private readonly static float _chanceOfMutation = 0.5f;
+    private readonly static float _chanceOfPlusMinusChange = 0.9f;
+    private readonly static float _chanceOfNewRandomVal = 0.1f;
+
+    public void Mutate() {
+        if (RND.NextDouble() <= _chanceOfMutation) {
+            foreach (var conn in Connections) {
+                if (RND.NextDouble() <= _chanceOfPlusMinusChange) {
+                    //float changeFactor = 1 + ((float)(RND.NextDouble() * 0.4 - 0.2));
+                    float changeFactor = (float)(conn.ConnWeight * (RND.NextDouble() * 0.4 - 0.2));
+                    conn.ConnWeight *= changeFactor;
+                }
+                else {
+                    conn.ConnWeight = (float)(RND.NextDouble() * 40 - 20);
+                }
+
+                conn.ConnWeight = Math.Clamp(conn.ConnWeight, -20f, 21f);
+            }
+        }
+    }
+
     public void AddNode() {
         // Select a connection and disable it
         // Add 1 node to the arrNode()
         // Add 2 connections to arrConnection()
         // Get the layers right
 
-        Random RND = new();
         if (RND.NextDouble() <= 0.1) {
             Connection rndConn = Connections[RND.Next(0, Connections.Count)];
             rndConn.Enabled = false;
@@ -146,7 +199,6 @@ public class Brain() {
         // 20 Attemps made to find valid node pair
         // 25% Chance disabled connection being reactivated
 
-        Random RND = new();
         if (RND.NextDouble() <= 0.05) {
             int attempts = 0;
             bool found = false;
@@ -172,63 +224,6 @@ public class Brain() {
                 attempts++;
             }
         }
-    }
-
-    private readonly static float _chanceOfMutation = 0.5f;
-    private readonly static float _chanceOfPlusMinusChange = 0.9f;
-    private readonly static float _chanceOfNewRandomVal = 0.1f;
-
-    public void Mutate() {
-        Random RND = new();
-
-        if (RND.NextDouble() <= _chanceOfMutation) {
-            foreach (var conn in Connections) {
-                if (RND.NextDouble() <= _chanceOfPlusMinusChange) {
-                    //float changeFactor = 1 + ((float)(RND.NextDouble() * 0.4 - 0.2));
-                    float changeFactor = (float)(conn.ConnWeight * (RND.NextDouble() * 0.4 - 0.2));
-                    conn.ConnWeight *= changeFactor;
-                }
-                else {
-                    conn.ConnWeight = (float)(RND.NextDouble() * 40 - 20);
-                }
-
-                conn.ConnWeight = Math.Clamp(conn.ConnWeight, -10f, 10f);
-            }
-        }
-    }
-
-    public void LoadInputs(float[] inputs) {
-        int i = 0;
-        foreach (var node in Nodes) {
-            if (node.NodeLayer != 1) continue;
-            node.SumInput = inputs[i];
-            node.SumOutput = inputs[i++];
-        }
-    }
-
-    public void RunTheNetwork() {
-        int maxLayer = Nodes.Max(n => n.NodeLayer);
-
-        for (int layer = 2; layer <= maxLayer; layer++) {
-            foreach (var node in Nodes) {
-                if (node.NodeLayer != layer) continue;
-
-                node.SumInput = 0;
-                foreach (var conn in Connections.Where(c => c.OutNodeID == node.NodeID && c.Enabled)) {
-                    Node inputNode = Nodes.FirstOrDefault(x => x.NodeID == conn.InNodeID);
-                    if (inputNode != null) {
-                        node.SumInput += inputNode.SumOutput * conn.ConnWeight;
-                    }
-                }
-                node.SumOutput = (float)(1 / (1 + Math.Exp(-node.SumInput)));
-            }
-        }
-    }
-
-    public float GetOutput() {
-        var outputNode = Nodes.FirstOrDefault(x => x.NodeType == NodeTypeEnum.Output);
-        return outputNode.SumOutput;
-        //return outputNode != null ? outputNode.SumOutput : 0;
     }
 
     private readonly static float _c1 = 1.0f;
